@@ -16,13 +16,13 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-package main
+package xtownrider
 
-import (
-	xtownrider "github.com/protheory8/xtownrider/internal/app/xtownrider"
+const (
+	// WindowTitle is a constant that stores the name of the window.
+	WindowTitle = "Xtownrider"
+	// WindowWidth is a constant that stores the width of the window.
+	WindowWidth = 800
+	// WindowHeight is a constant that stores the height of the window.
+	WindowHeight = 600
 )
-
-func main() {
-	gameState := xtownrider.NewGameState()
-	defer gameState.Drop()
-}
