@@ -25,7 +25,7 @@ func RenderSystem(entities []*Entity, renderer *sdl.Renderer) {
 	renderer.Clear()
 
 	for _, entity := range entities {
-		if entity != nil {
+		if entity != nil && entity.spriteComponent != nil {
 			renderer.Copy(entity.spriteComponent.Texture, nil, nil)
 		}
 	}
