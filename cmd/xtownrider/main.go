@@ -18,11 +18,11 @@
 
 package main
 
-import (
-	xtownrider "github.com/protheory8/xtownrider/internal/app/xtownrider"
-)
+import "github.com/protheory8/xtownrider/internal/app/xtownrider"
 
 func main() {
 	gameState := xtownrider.NewGameState()
 	defer gameState.Drop()
+
+	xtownrider.MainGameLoop()
 }
