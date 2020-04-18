@@ -16,33 +16,19 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-package xtownrider
+package libxtownrider
 
-import "github.com/protheory8/xtownrider/pkg/libxtownrider"
+import "github.com/veandco/go-sdl2/sdl"
 
-const (
-	// WindowTitle is a constant that stores the name of the window.
-	WindowTitle = "Xtownrider"
-	// WindowWidth is a constant that stores the width of the window.
-	WindowWidth = 800
-	// WindowHeight is a constant that stores the height of the window.
-	WindowHeight = 600
-)
+// RenderSystem is an ECS system that renders SpriteComponents.
+func RenderSystem(entities []*Entity, renderer *sdl.Renderer) {
+	renderer.Clear()
 
-// MainGameLoop is the main game loop of the game
-func MainGameLoop() {
-	gameState := NewGameState()
-	defer gameState.Drop()
-
-	coolSprite, err := libxtownrider.NewSpriteComponent(gameState.Renderer, "resources/resource.bmp")
-	if err != nil {
-		panic(err)
+	for _, entity := range entities {
+		if entity != nil {
+			renderer.Copy(entity.spriteComponent.Texture, nil, nil)
+		}
 	}
 
-	coolEntity := libxtownrider.NewEntity(coolSprite)
-	entityList := []*libxtownrider.Entity{coolEntity}
-
-	for {
-		libxtownrider.RenderSystem(entityList, gameState.Renderer)
-	}
+	renderer.Present()
 }

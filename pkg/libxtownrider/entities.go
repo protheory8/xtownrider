@@ -18,26 +18,16 @@
 
 package libxtownrider
 
-import (
-	"fmt"
-	"time"
-)
+// Entity is simply a collection of ECS components.
+type Entity struct {
+	spriteComponent *SpriteComponent
+}
 
-const (
-	// LogTypeDebug is debug log message type.
-	LogTypeDebug = iota
-	// LogTypeError is error log message type.
-	LogTypeError = iota
-)
+// NewEntity makes new instance of Entity
+func NewEntity(spriteComponent *SpriteComponent) *Entity {
+	entity := new(Entity)
 
-// Log prints out text with some additions.
-func Log(logType int, message string) {
-	switch logType {
-	case LogTypeDebug:
-		fmt.Printf("[%s] [DEBUG] %s\n", time.Now().UTC().Format("2006-01-02T15:04:05Z"), message)
-	case LogTypeError:
-		fmt.Printf("[%s] [ERROR] %s\n", time.Now().UTC().Format("2006-01-02T15:04:05Z"), message)
-	default:
-		panic("Incorrect logType")
-	}
+	entity.spriteComponent = spriteComponent
+
+	return entity
 }
