@@ -26,3 +26,8 @@ const (
 	// WindowHeight is a constant that stores the height of the window.
 	WindowHeight = 600
 )
+
+// MainGameLoop is the main game loop of the game
+func MainGameLoop() {
+
+}

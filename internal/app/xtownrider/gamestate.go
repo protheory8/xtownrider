@@ -19,6 +19,7 @@
 package xtownrider
 
 import (
+	"github.com/protheory8/xtownrider/pkg/libxtownrider"
 	"github.com/veandco/go-sdl2/sdl"
 )
 
@@ -32,8 +33,6 @@ type GameState struct {
 func NewGameState() *GameState {
 	var err error
 	gameState := new(GameState)
-	gameState.Window = nil
-	gameState.Renderer = nil
 
 	err = sdl.Init(sdl.INIT_EVERYTHING)
 	if err != nil {
@@ -58,6 +57,8 @@ func NewGameState() *GameState {
 
 // Drop invokes Destroy on every SDL component.
 func (gameState *GameState) Drop() {
+	libxtownrider.Log(libxtownrider.LogTypeDebug, "Dropping GameState...")
+
 	if gameState.Window != nil {
 		gameState.Window.Destroy()
 		gameState.Window = nil
