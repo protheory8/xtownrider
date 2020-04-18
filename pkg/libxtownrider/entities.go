@@ -16,20 +16,18 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-package main
+package libxtownrider
 
-import (
-	"fmt"
+// Entity is simply a collection of ECS components.
+type Entity struct {
+	spriteComponent *SpriteComponent
+}
 
-	"github.com/protheory8/xtownrider/internal/app/xtownrider"
-)
+// NewEntity makes new instance of Entity
+func NewEntity(spriteComponent *SpriteComponent) *Entity {
+	entity := new(Entity)
 
-func main() {
-	fmt.Println("Xtownrider Copyright © 2020 The Xtownrider Contributors")
-	fmt.Println("This program comes with ABSOLUTELY NO WARRANTY.")
-	fmt.Println("This is free software, and you are welcome to redistribute it")
-	fmt.Println("under certain conditions. Read file 'COPYING' for details.")
-	fmt.Println()
+	entity.spriteComponent = spriteComponent
 
-	xtownrider.MainGameLoop()
+	return entity
 }

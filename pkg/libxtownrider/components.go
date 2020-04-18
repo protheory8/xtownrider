@@ -16,7 +16,7 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-package xtownrider
+package libxtownrider
 
 import "github.com/veandco/go-sdl2/sdl"
 
@@ -25,7 +25,7 @@ type SpriteComponent struct {
 	Texture *sdl.Texture
 }
 
-// NewSpriteComponent makes a new instance of SpriteComponent by reading the texture from file.
+// NewSpriteComponent makes a new instance of SpriteComponent by reading the BMP file.
 func NewSpriteComponent(renderer *sdl.Renderer, file string) (*SpriteComponent, error) {
 	var err error
 	var surface *sdl.Surface
@@ -35,9 +35,9 @@ func NewSpriteComponent(renderer *sdl.Renderer, file string) (*SpriteComponent, 
 	if err != nil {
 		return nil, err
 	}
+	defer surface.Free()
 
 	spriteComponent.Texture, err = renderer.CreateTextureFromSurface(surface)
-	defer surface.Free()
 	if err != nil {
 		return nil, err
 	}
