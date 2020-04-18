@@ -21,12 +21,12 @@ package libxtownrider
 import "github.com/veandco/go-sdl2/sdl"
 
 // RenderSystem is an ECS system that renders SpriteComponents.
-func RenderSystem(entities []*Entity, renderer *sdl.Renderer) {
+func RenderSystem(entities *[]*Entity, renderer *sdl.Renderer) {
 	renderer.Clear()
 
-	for _, entity := range entities {
-		if entity != nil && entity.spriteComponent != nil {
-			renderer.Copy(entity.spriteComponent.Texture, nil, nil)
+	for _, entity := range *entities {
+		if entity != nil && entity.SpriteComponent != nil {
+			renderer.Copy(entity.SpriteComponent.Texture, nil, entity.SpriteComponent.Rect)
 		}
 	}
 

@@ -33,16 +33,24 @@ const (
 func MainGameLoop() {
 	gameState := NewGameState()
 	defer gameState.Drop()
+	entityManager := libxtownrider.NewEntityManager()
 
-	coolSprite, err := libxtownrider.NewSpriteComponent(gameState.Renderer, "resources/resource.bmp")
-	if err != nil {
-		panic(err)
-	}
+	entityManager.AddEntity(libxtownrider.NewEntityBuilder().
+		AddSprite(gameState.Renderer, "resources/resource.bmp").
+		SetLocation(400, 150).
+		Build())
 
-	coolEntity := libxtownrider.NewEntity(coolSprite)
-	entityList := []*libxtownrider.Entity{coolEntity}
+	entityManager.AddEntity(libxtownrider.NewEntityBuilder().
+		AddSprite(gameState.Renderer, "resources/resource.bmp").
+		SetLocation(100, 150).
+		Build())
+
+	entityManager.AddEntity(libxtownrider.NewEntityBuilder().
+		AddSprite(gameState.Renderer, "resources/resource.bmp").
+		SetLocation(300, 400).
+		Build())
 
 	for {
-		libxtownrider.RenderSystem(entityList, gameState.Renderer)
+		libxtownrider.RenderSystem(entityManager.GetEntities(), gameState.Renderer)
 	}
 }
