@@ -23,13 +23,13 @@ import "github.com/veandco/go-sdl2/sdl"
 // SpriteComponent is an ECS component that stores texture.
 type SpriteComponent struct {
 	Texture *sdl.Texture
+	Rect    *sdl.Rect
 }
 
-// NewSpriteComponent makes a new instance of SpriteComponent by reading the BMP file.
-func NewSpriteComponent(renderer *sdl.Renderer, file string) (*SpriteComponent, error) {
+func loadTextureFromFile(renderer *sdl.Renderer, file string) (*sdl.Texture, error) {
 	var err error
 	var surface *sdl.Surface
-	spriteComponent := new(SpriteComponent)
+	var texture *sdl.Texture
 
 	surface, err = sdl.LoadBMP(file)
 	if err != nil {
@@ -37,7 +37,26 @@ func NewSpriteComponent(renderer *sdl.Renderer, file string) (*SpriteComponent, 
 	}
 	defer surface.Free()
 
-	spriteComponent.Texture, err = renderer.CreateTextureFromSurface(surface)
+	texture, err = renderer.CreateTextureFromSurface(surface)
+	if err != nil {
+		return nil, err
+	}
+
+	return texture, nil
+}
+
+// NewSpriteComponent makes a new instance of SpriteComponent by reading the BMP file.
+func NewSpriteComponent(renderer *sdl.Renderer, file string) (*SpriteComponent, error) {
+	var err error
+	spriteComponent := new(SpriteComponent)
+
+	spriteComponent.Texture, err = loadTextureFromFile(renderer, file)
+	if err != nil {
+		return nil, err
+	}
+
+	spriteComponent.Rect = new(sdl.Rect)
+	_, _, spriteComponent.Rect.W, spriteComponent.Rect.H, err = spriteComponent.Texture.Query()
 	if err != nil {
 		return nil, err
 	}
