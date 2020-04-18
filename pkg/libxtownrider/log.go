@@ -26,7 +26,7 @@ import (
 const (
 	// LogTypeDebug is debug log message type.
 	LogTypeDebug = iota
-	// LogTypeError is debug log message type.
+	// LogTypeError is error log message type.
 	LogTypeError = iota
 )
 
