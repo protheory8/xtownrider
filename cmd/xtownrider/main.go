@@ -25,8 +25,8 @@ package main
 import (
 	"fmt"
 
-	"github.com/protheory8/goalengine"
 	"github.com/protheory8/xtownrider/internal/app/xtownrider"
+	"github.com/protheory8/xtownrider/pkg/goalengine"
 )
 
 func main() {
