@@ -20,21 +20,29 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-package main
+package goalengine
 
-import (
-	"fmt"
+import "github.com/veandco/go-sdl2/sdl"
 
-	"github.com/protheory8/goalengine"
-	"github.com/protheory8/xtownrider/internal/app/xtownrider"
-)
+func loadTextureFromFile(renderer *sdl.Renderer, file string) (*sdl.Texture, error) {
+	var err error
+	var surface *sdl.Surface
+	var texture *sdl.Texture
 
-func main() {
-	fmt.Println("Xtownrider")
-	fmt.Println()
+	surface, err = sdl.LoadBMP(file)
+	if err != nil {
+		return nil, err
+	}
+	defer surface.Free()
 
-	gameState, resourceManager, entityManager := xtownrider.Init()
-	defer gameState.Drop()
-	xtownrider.MainGameLoop(gameState, resourceManager, entityManager)
-	goalengine.FreeSystem(entityManager.GetEntities())
+	texture, err = renderer.CreateTextureFromSurface(surface)
+	if err != nil {
+		return nil, err
+	}
+
+	return texture, nil
+}
+
+func unimplemented() {
+	panic("Unimplemented")
 }

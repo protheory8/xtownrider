@@ -20,21 +20,31 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-package main
+package goalengine
 
-import (
-	"fmt"
+import "github.com/veandco/go-sdl2/sdl"
 
-	"github.com/protheory8/goalengine"
-	"github.com/protheory8/xtownrider/internal/app/xtownrider"
-)
+// RenderSystem is an ECS system that renders SpriteComponents.
+func RenderSystem(entities *[]*Entity, renderer *sdl.Renderer) {
+	renderer.Clear()
 
-func main() {
-	fmt.Println("Xtownrider")
-	fmt.Println()
+	for _, entity := range *entities {
+		if entity != nil && entity.SpriteComponent != nil {
+			renderer.Copy(entity.SpriteComponent.Texture, nil, &sdl.Rect{X: entity.TransformComponent.X, Y: entity.TransformComponent.Y,
+				W: entity.SpriteComponent.W, H: entity.SpriteComponent.H})
+		}
+	}
 
-	gameState, resourceManager, entityManager := xtownrider.Init()
-	defer gameState.Drop()
-	xtownrider.MainGameLoop(gameState, resourceManager, entityManager)
-	goalengine.FreeSystem(entityManager.GetEntities())
+	renderer.Present()
+}
+
+// FreeSystem deallocated and destroys everything.
+func FreeSystem(entities *[]*Entity) {
+	for _, entity := range *entities {
+		if entity != nil {
+			if entity.SpriteComponent != nil && entity.SpriteComponent.Texture != nil {
+				entity.SpriteComponent.Texture.Destroy()
+			}
+		}
+	}
 }

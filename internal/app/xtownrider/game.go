@@ -1,24 +1,31 @@
-// Xtownrider - a car race game written in Go.
-// Copyright © 2020 The Xtownrider Contributors
-//
 // This file is part of Xtownrider.
 //
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
+// Copyright © 2020 The Xtownrider Contributors
 //
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
 //
-// You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <https://www.gnu.org/licenses/>.
+// The above copyright notice and this permission notice shall be included in all
+// copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+// SOFTWARE.
 
 package xtownrider
 
-import "github.com/protheory8/goalengine"
+import (
+	"github.com/protheory8/goalengine"
+	"github.com/veandco/go-sdl2/sdl"
+)
 
 const (
 	// WindowTitle is a constant that stores the name of the window.
@@ -29,28 +36,65 @@ const (
 	WindowHeight = 600
 )
 
-// MainGameLoop is the main game loop of the game
-func MainGameLoop() {
+// Init runs some initialization functions.
+func Init() (*GameState, *goalengine.ResourceManager, *goalengine.EntityManager) {
 	gameState := NewGameState()
-	defer gameState.Drop()
+	resourceManager := goalengine.NewResourceManager()
 	entityManager := goalengine.NewEntityManager()
 
+	resourceManager.AddResources(gameState.Renderer, []string{"resources/resource.bmp", "resources/resource2.bmp"})
+
 	entityManager.AddEntity(goalengine.NewEntityBuilder().
-		AddSprite(gameState.Renderer, "resources/resource.bmp").
+		AddSprite(resourceManager.Get(gameState.Renderer, "resources/resource.bmp").(*goalengine.SpriteComponent)).
 		SetLocation(400, 150).
 		Build())
 
 	entityManager.AddEntity(goalengine.NewEntityBuilder().
-		AddSprite(gameState.Renderer, "resources/resource.bmp").
+		AddSprite(resourceManager.Get(gameState.Renderer, "resources/resource2.bmp").(*goalengine.SpriteComponent)).
 		SetLocation(100, 150).
 		Build())
 
 	entityManager.AddEntity(goalengine.NewEntityBuilder().
-		AddSprite(gameState.Renderer, "resources/resource.bmp").
+		AddSprite(resourceManager.Get(gameState.Renderer, "resources/resource.bmp").(*goalengine.SpriteComponent)).
 		SetLocation(300, 400).
 		Build())
 
+	return gameState, resourceManager, entityManager
+}
+
+// MainGameLoop is the main game loop of the game.
+// It mainly does three things:
+// 1. Updates the game state.
+// 2. Renders to screen.
+// 3. Handles input.
+func MainGameLoop(gameState *GameState, resourceManager *goalengine.ResourceManager, entityManager *goalengine.EntityManager) {
+	for !gameState.ShouldQuit {
+		update(gameState)
+		render(gameState, entityManager.GetEntities())
+		handleInput(gameState)
+	}
+}
+
+func update(_ *GameState) {}
+
+func render(gameState *GameState, entities *[]*goalengine.Entity) {
+	goalengine.RenderSystem(entities, gameState.Renderer)
+}
+
+func handleInput(gameState *GameState) {
+	var event sdl.Event
+	var eventType uint32
+
 	for {
-		goalengine.RenderSystem(entityManager.GetEntities(), gameState.Renderer)
+		event = sdl.PollEvent()
+		if event == nil {
+			break
+		}
+
+		eventType = event.GetType()
+		switch eventType {
+		case sdl.QUIT:
+			gameState.ShouldQuit = true
+		}
 	}
 }

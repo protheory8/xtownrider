@@ -20,21 +20,28 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-package main
+package goalengine
 
 import (
 	"fmt"
-
-	"github.com/protheory8/goalengine"
-	"github.com/protheory8/xtownrider/internal/app/xtownrider"
+	"time"
 )
 
-func main() {
-	fmt.Println("Xtownrider")
-	fmt.Println()
+const (
+	// LogTypeDebug is debug log message type.
+	LogTypeDebug = iota
+	// LogTypeError is error log message type.
+	LogTypeError = iota
+)
 
-	gameState, resourceManager, entityManager := xtownrider.Init()
-	defer gameState.Drop()
-	xtownrider.MainGameLoop(gameState, resourceManager, entityManager)
-	goalengine.FreeSystem(entityManager.GetEntities())
+// Log prints out text with some additions.
+func Log(logType int, message string) {
+	switch logType {
+	case LogTypeDebug:
+		fmt.Printf("[%s] [DEBUG] %s\n", time.Now().UTC().Format("2006-01-02T15:04:05Z"), message)
+	case LogTypeError:
+		fmt.Printf("[%s] [ERROR] %s\n", time.Now().UTC().Format("2006-01-02T15:04:05Z"), message)
+	default:
+		panic("Incorrect logType")
+	}
 }
