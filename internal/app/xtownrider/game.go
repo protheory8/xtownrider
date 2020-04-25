@@ -23,7 +23,7 @@
 package xtownrider
 
 import (
-	"github.com/protheory8/goalengine"
+	"github.com/protheory8/xtownrider/pkg/goalengine"
 	"github.com/veandco/go-sdl2/sdl"
 )
 
