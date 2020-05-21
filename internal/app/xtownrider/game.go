@@ -37,7 +37,7 @@ const (
 )
 
 // Init runs some initialization functions.
-func Init() (*GameState, *goalengine.ResourceManager, *goalengine.EntityManager) {
+func Init() (GameState, goalengine.ResourceManager, goalengine.EntityManager) {
 	gameState := NewGameState()
 	resourceManager := goalengine.NewResourceManager()
 	entityManager := goalengine.NewEntityManager()
@@ -77,7 +77,7 @@ func MainGameLoop(gameState *GameState, resourceManager *goalengine.ResourceMana
 
 func update(_ *GameState) {}
 
-func render(gameState *GameState, entities *[]*goalengine.Entity) {
+func render(gameState *GameState, entities []goalengine.Entity) {
 	goalengine.RenderSystem(entities, gameState.Renderer)
 }
 
@@ -88,7 +88,7 @@ func handleInput(gameState *GameState) {
 	for {
 		event = sdl.PollEvent()
 		if event == nil {
-			break
+			return
 		}
 
 		eventType = event.GetType()

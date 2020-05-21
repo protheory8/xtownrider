@@ -35,9 +35,9 @@ type GameState struct {
 }
 
 // NewGameState makes a new instance of GameState struct.
-func NewGameState() *GameState {
+func NewGameState() GameState {
 	var err error
-	gameState := new(GameState)
+	gameState := GameState{}
 
 	err = sdl.Init(sdl.INIT_EVERYTHING)
 	if err != nil {

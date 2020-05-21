@@ -23,9 +23,7 @@
 package goalengine
 
 import (
-	"fmt"
 	"path/filepath"
-	"sync"
 
 	"github.com/veandco/go-sdl2/sdl"
 )
@@ -42,13 +40,13 @@ type ResourceManager struct {
 }
 
 // NewResourceManager makes new instance of ResourceManager.
-func NewResourceManager() *ResourceManager {
-	resourceManager := new(ResourceManager)
+func NewResourceManager() ResourceManager {
+	resourceManager := ResourceManager{}
 	resourceManager.resources = make(map[string]Resource)
 	return resourceManager
 }
 
-func (resourceManager *ResourceManager) addResource(id int, wg *sync.WaitGroup, mutex *sync.Mutex, renderer *sdl.Renderer, file string) {
+func addResource(resourceManager *ResourceManager, renderer *sdl.Renderer, file string) {
 	var err error
 
 	Log(LogTypeDebug, "Adding resource '"+file+"'...")
@@ -61,52 +59,27 @@ func (resourceManager *ResourceManager) addResource(id int, wg *sync.WaitGroup, 
 			panic(err)
 		}
 
-		if mutex != nil {
-			fmt.Printf("%d here 1\n", id)
-			mutex.Lock()
-			fmt.Printf("%d here 2\n", id)
-			resourceManager.resources[file] = sprite
-			mutex.Unlock()
-			fmt.Printf("%d here 3\n", id)
-		} else {
-			resourceManager.resources[file] = sprite
-		}
+		resourceManager.resources[file] = sprite
 	default:
 		panic("Unknown resource file extension")
-	}
-
-	fmt.Printf("%d here 4\n", id)
-
-	if wg != nil {
-		fmt.Printf("%d here 5\n", id)
-		wg.Done()
-		fmt.Printf("%d here 6\n", id)
 	}
 }
 
 // AddResources takes filenames as an input and loads resources into memory.
 func (resourceManager *ResourceManager) AddResources(renderer *sdl.Renderer, files []string) {
-	wg := sync.WaitGroup{}
-	mutex := sync.Mutex{}
-
-	for i, file := range files {
+	for _, file := range files {
 		if _, ok := resourceManager.resources[file]; !ok {
-			wg.Add(1)
-			go resourceManager.addResource(i, &wg, &mutex, renderer, file)
+			addResource(resourceManager, renderer, file)
 		}
 	}
-
-	fmt.Printf("AddResource wait\n")
-	wg.Wait()
-	fmt.Printf("AddResource wait out\n")
 }
 
 // Get retrieves resource and returns it.
 func (resourceManager *ResourceManager) Get(renderer *sdl.Renderer, file string) Resource {
-	if _, ok := resourceManager.resources[file]; ok {
-		return resourceManager.resources[file]
+	if resource, ok := resourceManager.resources[file]; ok {
+		return resource
 	}
 
-	resourceManager.addResource(0, nil, nil, renderer, file)
+	addResource(resourceManager, renderer, file)
 	return resourceManager.resources[file]
 }
