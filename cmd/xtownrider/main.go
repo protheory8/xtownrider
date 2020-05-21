@@ -26,7 +26,7 @@ import (
 	"runtime"
 
 	"github.com/protheory8/xtownrider/internal/app/xtownrider"
-	"github.com/protheory8/xtownrider/pkg/goalengine"
+	goalengine "github.com/protheory8/xtownrider/pkg/libxtownrider"
 )
 
 func main() {

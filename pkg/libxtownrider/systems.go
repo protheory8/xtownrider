@@ -20,7 +20,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-package goalengine
+package libxtownrider
 
 import (
 	"github.com/veandco/go-sdl2/sdl"

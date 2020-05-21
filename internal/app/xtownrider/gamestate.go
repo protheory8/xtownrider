@@ -23,7 +23,7 @@
 package xtownrider
 
 import (
-	"github.com/protheory8/xtownrider/pkg/goalengine"
+	"github.com/protheory8/xtownrider/pkg/libxtownrider"
 	"github.com/veandco/go-sdl2/sdl"
 )
 
@@ -62,7 +62,7 @@ func NewGameState() GameState {
 
 // Drop invokes Destroy on every SDL component.
 func (gameState *GameState) Drop() {
-	goalengine.Log(goalengine.LogTypeDebug, "Dropping GameState...")
+	libxtownrider.Log(libxtownrider.LogTypeDebug, "Dropping GameState...")
 
 	if gameState.Window != nil {
 		gameState.Window.Destroy()

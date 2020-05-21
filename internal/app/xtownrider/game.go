@@ -23,7 +23,7 @@
 package xtownrider
 
 import (
-	"github.com/protheory8/xtownrider/pkg/goalengine"
+	"github.com/protheory8/xtownrider/pkg/libxtownrider"
 	"github.com/veandco/go-sdl2/sdl"
 )
 
@@ -37,25 +37,25 @@ const (
 )
 
 // Init runs some initialization functions.
-func Init() (GameState, goalengine.ResourceManager, goalengine.EntityManager) {
+func Init() (GameState, libxtownrider.ResourceManager, libxtownrider.EntityManager) {
 	gameState := NewGameState()
-	resourceManager := goalengine.NewResourceManager()
-	entityManager := goalengine.NewEntityManager()
+	resourceManager := libxtownrider.NewResourceManager()
+	entityManager := libxtownrider.NewEntityManager()
 
 	resourceManager.AddResources(gameState.Renderer, []string{"resources/resource.bmp", "resources/resource2.bmp"})
 
-	entityManager.AddEntity(goalengine.NewEntityBuilder().
-		AddSprite(resourceManager.Get(gameState.Renderer, "resources/resource.bmp").(*goalengine.SpriteComponent)).
+	entityManager.AddEntity(libxtownrider.NewEntityBuilder().
+		AddSprite(resourceManager.Get(gameState.Renderer, "resources/resource.bmp").(*libxtownrider.SpriteComponent)).
 		SetLocation(400, 150).
 		Build())
 
-	entityManager.AddEntity(goalengine.NewEntityBuilder().
-		AddSprite(resourceManager.Get(gameState.Renderer, "resources/resource2.bmp").(*goalengine.SpriteComponent)).
+	entityManager.AddEntity(libxtownrider.NewEntityBuilder().
+		AddSprite(resourceManager.Get(gameState.Renderer, "resources/resource2.bmp").(*libxtownrider.SpriteComponent)).
 		SetLocation(100, 150).
 		Build())
 
-	entityManager.AddEntity(goalengine.NewEntityBuilder().
-		AddSprite(resourceManager.Get(gameState.Renderer, "resources/resource.bmp").(*goalengine.SpriteComponent)).
+	entityManager.AddEntity(libxtownrider.NewEntityBuilder().
+		AddSprite(resourceManager.Get(gameState.Renderer, "resources/resource.bmp").(*libxtownrider.SpriteComponent)).
 		SetLocation(300, 400).
 		Build())
 
@@ -67,7 +67,7 @@ func Init() (GameState, goalengine.ResourceManager, goalengine.EntityManager) {
 // 1. Updates the game state.
 // 2. Renders to screen.
 // 3. Handles input.
-func MainGameLoop(gameState *GameState, resourceManager *goalengine.ResourceManager, entityManager *goalengine.EntityManager) {
+func MainGameLoop(gameState *GameState, resourceManager *libxtownrider.ResourceManager, entityManager *libxtownrider.EntityManager) {
 	for !gameState.ShouldQuit {
 		update(gameState)
 		render(gameState, entityManager.GetEntities())
@@ -77,8 +77,8 @@ func MainGameLoop(gameState *GameState, resourceManager *goalengine.ResourceMana
 
 func update(_ *GameState) {}
 
-func render(gameState *GameState, entities []goalengine.Entity) {
-	goalengine.RenderSystem(entities, gameState.Renderer)
+func render(gameState *GameState, entities []libxtownrider.Entity) {
+	libxtownrider.RenderSystem(entities, gameState.Renderer)
 }
 
 func handleInput(gameState *GameState) {

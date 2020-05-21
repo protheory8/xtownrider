@@ -20,7 +20,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-package goalengine
+package libxtownrider
 
 // Entity is simply a collection of ECS components.
 type Entity struct {
