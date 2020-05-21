@@ -30,16 +30,13 @@ type Entity struct {
 
 // EntityBuilder is a helper struct that builds entities
 type EntityBuilder struct {
-	entity *Entity
+	entity Entity
 }
 
 // NewEntityBuilder makes a new instance of EntityBuilder.
-func NewEntityBuilder() *EntityBuilder {
-	entityBuilder := new(EntityBuilder)
-
-	entityBuilder.entity = new(Entity)
-	entityBuilder.entity.SpriteComponent = nil
-	entityBuilder.entity.TransformComponent = nil
+func NewEntityBuilder() EntityBuilder {
+	entityBuilder := EntityBuilder{}
+	entityBuilder.entity = Entity{SpriteComponent: nil, TransformComponent: nil}
 
 	return entityBuilder
 }
@@ -53,40 +50,39 @@ func (entityBuilder EntityBuilder) AddSprite(sprite *SpriteComponent) EntityBuil
 // SetLocation sets location of the sprite using x and y coordinates.
 func (entityBuilder EntityBuilder) SetLocation(x int32, y int32) EntityBuilder {
 	if entityBuilder.entity.TransformComponent == nil {
-		entityBuilder.entity.TransformComponent = new(TransformComponent)
+		entityBuilder.entity.TransformComponent = NewTransformComponent(x, y)
+		return entityBuilder
 	}
 
 	entityBuilder.entity.TransformComponent.X = x
 	entityBuilder.entity.TransformComponent.Y = y
-
 	return entityBuilder
 }
 
 // Build is a final method to call and it returns built entity.
-func (entityBuilder EntityBuilder) Build() *Entity {
+func (entityBuilder EntityBuilder) Build() Entity {
 	return entityBuilder.entity
 }
 
 // EntityManager is a helper struct that manages all entities.
 type EntityManager struct {
-	entities []*Entity
+	entities []Entity
 }
 
 // NewEntityManager makes a new instance of EntityManager.
-func NewEntityManager() *EntityManager {
-	entityManager := new(EntityManager)
-
-	entityManager.entities = []*Entity{}
+func NewEntityManager() EntityManager {
+	entityManager := EntityManager{}
+	entityManager.entities = []Entity{}
 
 	return entityManager
 }
 
 // AddEntity adds entity into the list.
-func (entityManager *EntityManager) AddEntity(entity *Entity) {
+func (entityManager *EntityManager) AddEntity(entity Entity) {
 	entityManager.entities = append(entityManager.entities, entity)
 }
 
 // GetEntities retrieves entities from EntityManager.
-func (entityManager *EntityManager) GetEntities() *[]*Entity {
-	return &entityManager.entities
+func (entityManager *EntityManager) GetEntities() []Entity {
+	return entityManager.entities
 }

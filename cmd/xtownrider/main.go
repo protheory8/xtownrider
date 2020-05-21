@@ -23,18 +23,16 @@
 package main
 
 import (
-	"fmt"
+	"runtime"
 
 	"github.com/protheory8/xtownrider/internal/app/xtownrider"
 	"github.com/protheory8/xtownrider/pkg/goalengine"
 )
 
 func main() {
-	fmt.Println("Xtownrider")
-	fmt.Println()
-
+	runtime.LockOSThread()
 	gameState, resourceManager, entityManager := xtownrider.Init()
 	defer gameState.Drop()
-	xtownrider.MainGameLoop(gameState, resourceManager, entityManager)
-	goalengine.FreeSystem(entityManager.GetEntities())
+	defer goalengine.FreeSystem(entityManager.GetEntities())
+	xtownrider.MainGameLoop(&gameState, &resourceManager, &entityManager)
 }

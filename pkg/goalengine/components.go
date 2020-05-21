@@ -53,7 +53,7 @@ func NewSpriteComponent(renderer *sdl.Renderer, file string) (*SpriteComponent, 
 }
 
 // GetResourceFilename returns the filename of sprite.
-func (spriteComponent *SpriteComponent) GetResourceFilename() string {
+func (spriteComponent SpriteComponent) GetResourceFilename() string {
 	return spriteComponent.filename
 }
 
@@ -65,10 +65,6 @@ type TransformComponent struct {
 
 // NewTransformComponent makes new instance of TransformComponent.
 func NewTransformComponent(x int32, y int32) *TransformComponent {
-	transformComponent := new(TransformComponent)
-
-	transformComponent.X = x
-	transformComponent.Y = y
-
+	transformComponent := &TransformComponent{X: x, Y: y}
 	return transformComponent
 }
