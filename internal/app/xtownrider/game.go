@@ -88,7 +88,7 @@ func handleInput(gameState *GameState) {
 	for {
 		event = sdl.PollEvent()
 		if event == nil {
-			break
+			return
 		}
 
 		eventType = event.GetType()
