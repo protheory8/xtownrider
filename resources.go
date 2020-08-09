@@ -20,7 +20,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-package xtownrider
+package main
 
 import (
 	"path/filepath"
@@ -42,14 +42,18 @@ func newResourceManager() resourceManager {
 }
 
 func addResource(resourceManager *resourceManager, renderer *sdl.Renderer, fileName string) {
-	var err error
-
 	log(logTypeDebug, "Adding resource '"+fileName+"'...")
 
 	switch filepath.Ext(fileName) {
 	case ".bmp":
-		var sprite *sdl.Texture
-		sprite, err = loadBmpTextureFromFile(renderer, fileName)
+		sprite, err := loadBmpTextureFromFile(renderer, fileName)
+		if err != nil {
+			panic(err)
+		}
+
+		resourceManager.resources[fileName] = sprite
+	case ".png":
+		sprite, err := loadTextureFromFile(renderer, fileName)
 		if err != nil {
 			panic(err)
 		}
