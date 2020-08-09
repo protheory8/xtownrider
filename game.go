@@ -20,32 +20,59 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-package libxtownrider
+package xtownrider
 
 import (
 	"github.com/veandco/go-sdl2/sdl"
 )
 
-// RenderSystem is an ECS system that renders SpriteComponents.
-func RenderSystem(entities []Entity, renderer *sdl.Renderer) {
-	renderer.Clear()
+const (
+	windowTitle  = "Xtownrider"
+	windowWidth  = 800
+	windowHeight = 600
+)
 
-	for _, entity := range entities {
-		if entity.SpriteComponent != nil {
-			renderer.Copy(entity.SpriteComponent.Texture, nil, &sdl.Rect{X: entity.TransformComponent.X, Y: entity.TransformComponent.Y,
-				W: entity.SpriteComponent.W, H: entity.SpriteComponent.H})
-		}
-	}
+// gameInit runs some initialization functions.
+func gameInit() (gameState, resourceManager) {
+	gameState := newGameState()
+	resourceManager := newResourceManager()
 
-	renderer.Present()
+	resourceManager.addResources(gameState.renderer, []string{"resources/resource.bmp", "resources/resource2.bmp"})
+
+	return gameState, resourceManager
 }
 
-// FreeSystem deallocated and destroys everything.
-func FreeSystem(entities []Entity) {
-	Log(LogTypeDebug, "Freeing...")
-	for _, entity := range entities {
-		if entity.SpriteComponent != nil && entity.SpriteComponent.Texture != nil {
-			entity.SpriteComponent.Texture.Destroy()
+// mainGameLoop is the main game loop of the game.
+// It mainly does three things:
+// 1. Updates the game state.
+// 2. Renders to screen.
+// 3. Handles input.
+func mainGameLoop(gameState *gameState, resourceManager *resourceManager) {
+	for !gameState.shouldQuit {
+		update(gameState)
+		render(gameState)
+		handleInput(gameState)
+	}
+}
+
+func update(_ *gameState) {}
+
+func render(_ *gameState) {}
+
+func handleInput(gameState *gameState) {
+	var event sdl.Event
+	var eventType uint32
+
+	for {
+		event = sdl.PollEvent()
+		if event == nil {
+			return
+		}
+
+		eventType = event.GetType()
+		switch eventType {
+		case sdl.QUIT:
+			gameState.shouldQuit = true
 		}
 	}
 }

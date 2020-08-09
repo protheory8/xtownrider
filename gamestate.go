@@ -23,55 +23,61 @@
 package xtownrider
 
 import (
-	"github.com/protheory8/xtownrider/pkg/libxtownrider"
+	"github.com/veandco/go-sdl2/img"
 	"github.com/veandco/go-sdl2/sdl"
 )
 
-// GameState is a struct that stores current state of the game.
-type GameState struct {
-	ShouldQuit bool
-	Window     *sdl.Window
-	Renderer   *sdl.Renderer
+// gameState is a struct that stores current state of the game.
+type gameState struct {
+	shouldQuit bool
+	window     *sdl.Window
+	renderer   *sdl.Renderer
 }
 
-// NewGameState makes a new instance of GameState struct.
-func NewGameState() GameState {
+// newGameState makes a new instance of gameState struct.
+func newGameState() gameState {
 	var err error
-	gameState := GameState{}
+	gameState := gameState{}
 
 	err = sdl.Init(sdl.INIT_EVERYTHING)
 	if err != nil {
-		gameState.Drop()
+		gameState.drop()
 		panic(err)
 	}
 
-	gameState.Window, err = sdl.CreateWindow(WindowTitle, sdl.WINDOWPOS_UNDEFINED, sdl.WINDOWPOS_UNDEFINED, WindowWidth, WindowHeight, sdl.WINDOW_SHOWN)
+	err = img.Init(img.INIT_PNG)
 	if err != nil {
-		gameState.Drop()
+		gameState.drop()
 		panic(err)
 	}
 
-	gameState.Renderer, err = sdl.CreateRenderer(gameState.Window, -1, sdl.RENDERER_ACCELERATED|sdl.RENDERER_PRESENTVSYNC)
+	gameState.window, err = sdl.CreateWindow(windowTitle, sdl.WINDOWPOS_UNDEFINED, sdl.WINDOWPOS_UNDEFINED, windowWidth, windowHeight, sdl.WINDOW_SHOWN)
 	if err != nil {
-		gameState.Drop()
+		gameState.drop()
+		panic(err)
+	}
+
+	gameState.renderer, err = sdl.CreateRenderer(gameState.window, -1, sdl.RENDERER_ACCELERATED|sdl.RENDERER_PRESENTVSYNC)
+	if err != nil {
+		gameState.drop()
 		panic(err)
 	}
 
 	return gameState
 }
 
-// Drop invokes Destroy on every SDL component.
-func (gameState *GameState) Drop() {
-	libxtownrider.Log(libxtownrider.LogTypeDebug, "Dropping GameState...")
+// drop invokes Destroy on every SDL component.
+func (gameState *gameState) drop() {
+	log(logTypeDebug, "Dropping gameState...")
 
-	if gameState.Window != nil {
-		gameState.Window.Destroy()
-		gameState.Window = nil
+	if gameState.window != nil {
+		gameState.window.Destroy()
+		gameState.window = nil
 	}
 
-	if gameState.Renderer != nil {
-		gameState.Renderer.Destroy()
-		gameState.Renderer = nil
+	if gameState.renderer != nil {
+		gameState.renderer.Destroy()
+		gameState.renderer = nil
 	}
 
 	sdl.Quit()

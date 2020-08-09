@@ -20,7 +20,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-package libxtownrider
+package xtownrider
 
 import (
 	"path/filepath"
@@ -28,58 +28,52 @@ import (
 	"github.com/veandco/go-sdl2/sdl"
 )
 
-// Resource is an interface that all resources must implement.
-type Resource interface {
-	GetResourceFilename() string
-}
-
-// ResourceManager is a struct that manages all your game resources, like
+// resourceManager is a struct that manages all your game resources, like
 // sprites, audio files, etc.
-type ResourceManager struct {
-	resources map[string]Resource
+type resourceManager struct {
+	resources map[string]interface{}
 }
 
-// NewResourceManager makes new instance of ResourceManager.
-func NewResourceManager() ResourceManager {
-	resourceManager := ResourceManager{}
-	resourceManager.resources = make(map[string]Resource)
+// newResourceManager makes new instance of resourceManager.
+func newResourceManager() resourceManager {
+	resourceManager := resourceManager{}
+	resourceManager.resources = make(map[string]interface{})
 	return resourceManager
 }
 
-func addResource(resourceManager *ResourceManager, renderer *sdl.Renderer, file string) {
+func addResource(resourceManager *resourceManager, renderer *sdl.Renderer, fileName string) {
 	var err error
 
-	Log(LogTypeDebug, "Adding resource '"+file+"'...")
+	log(logTypeDebug, "Adding resource '"+fileName+"'...")
 
-	switch filepath.Ext(file) {
+	switch filepath.Ext(fileName) {
 	case ".bmp":
-		var sprite *SpriteComponent
-		sprite, err = NewSpriteComponent(renderer, file)
+		var sprite *sdl.Texture
+		sprite, err = loadBmpTextureFromFile(renderer, fileName)
 		if err != nil {
 			panic(err)
 		}
 
-		resourceManager.resources[file] = sprite
+		resourceManager.resources[fileName] = sprite
 	default:
-		panic("Unknown resource file extension")
+		panic("unknown resource file extension")
 	}
 }
 
-// AddResources takes filenames as an input and loads resources into memory.
-func (resourceManager *ResourceManager) AddResources(renderer *sdl.Renderer, files []string) {
-	for _, file := range files {
+// addResources takes filenames as an input and loads resources into memory.
+func (resourceManager *resourceManager) addResources(renderer *sdl.Renderer, fileNames []string) {
+	for _, file := range fileNames {
 		if _, ok := resourceManager.resources[file]; !ok {
 			addResource(resourceManager, renderer, file)
 		}
 	}
 }
 
-// Get retrieves resource and returns it.
-func (resourceManager *ResourceManager) Get(renderer *sdl.Renderer, file string) Resource {
-	if resource, ok := resourceManager.resources[file]; ok {
-		return resource
+// get retrieves resource and returns it.
+func (resourceManager *resourceManager) get(renderer *sdl.Renderer, file string) interface{} {
+	if _, ok := resourceManager.resources[file]; !ok {
+		addResource(resourceManager, renderer, file)
 	}
 
-	addResource(resourceManager, renderer, file)
 	return resourceManager.resources[file]
 }

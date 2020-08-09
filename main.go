@@ -20,19 +20,15 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-package main
+package xtownrider
 
-import (
-	"runtime"
-
-	"github.com/protheory8/xtownrider/internal/app/xtownrider"
-	goalengine "github.com/protheory8/xtownrider/pkg/libxtownrider"
-)
+import "runtime"
 
 func main() {
 	runtime.LockOSThread()
-	gameState, resourceManager, entityManager := xtownrider.Init()
-	defer gameState.Drop()
-	defer goalengine.FreeSystem(entityManager.GetEntities())
-	xtownrider.MainGameLoop(&gameState, &resourceManager, &entityManager)
+
+	gameState, resourceManager := gameInit()
+	defer gameState.drop()
+
+	mainGameLoop(&gameState, &resourceManager)
 }

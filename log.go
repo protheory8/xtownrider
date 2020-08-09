@@ -20,29 +20,30 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-package libxtownrider
+package xtownrider
 
-import "github.com/veandco/go-sdl2/sdl"
+import (
+	"fmt"
+	"time"
+)
 
-func loadTextureFromFile(renderer *sdl.Renderer, file string) (*sdl.Texture, error) {
-	var err error
-	var surface *sdl.Surface
-	var texture *sdl.Texture
+type logType int
 
-	surface, err = sdl.LoadBMP(file)
-	if err != nil {
-		return nil, err
+const (
+	// logTypeDebug is debug log message type.
+	logTypeDebug logType = iota
+	// logTypeError is error log message type.
+	logTypeError
+)
+
+// log prints out text with some additions.
+func log(logMessageType logType, message string) {
+	switch logMessageType {
+	case logTypeDebug:
+		fmt.Printf("[%s] [DEBUG] %s\n", time.Now().UTC().Format("2006-01-02T15:04:05Z"), message)
+	case logTypeError:
+		fmt.Printf("[%s] [ERROR] %s\n", time.Now().UTC().Format("2006-01-02T15:04:05Z"), message)
+	default:
+		panic("incorrect logMessageType")
 	}
-	defer surface.Free()
-
-	texture, err = renderer.CreateTextureFromSurface(surface)
-	if err != nil {
-		return nil, err
-	}
-
-	return texture, nil
-}
-
-func unimplemented() {
-	panic("Unimplemented")
 }

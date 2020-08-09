@@ -20,28 +20,45 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-package libxtownrider
+package xtownrider
 
 import (
-	"fmt"
-	"time"
+	"github.com/veandco/go-sdl2/img"
+	"github.com/veandco/go-sdl2/sdl"
 )
 
-const (
-	// LogTypeDebug is debug log message type.
-	LogTypeDebug = iota
-	// LogTypeError is error log message type.
-	LogTypeError = iota
-)
+func loadBmpTextureFromFile(renderer *sdl.Renderer, fileName string) (*sdl.Texture, error) {
+	surface, err := sdl.LoadBMP(fileName)
+	if err != nil {
+		return nil, err
+	}
+	defer surface.Free()
 
-// Log prints out text with some additions.
-func Log(logType int, message string) {
-	switch logType {
-	case LogTypeDebug:
-		fmt.Printf("[%s] [DEBUG] %s\n", time.Now().UTC().Format("2006-01-02T15:04:05Z"), message)
-	case LogTypeError:
-		fmt.Printf("[%s] [ERROR] %s\n", time.Now().UTC().Format("2006-01-02T15:04:05Z"), message)
-	default:
-		panic("Incorrect logType")
+	texture, err := renderer.CreateTextureFromSurface(surface)
+	if err != nil {
+		return nil, err
+	}
+
+	return texture, nil
+}
+
+func loadTextureFromFile(renderer *sdl.Renderer, fileName string) (*sdl.Texture, error) {
+	surface, err := img.Load(fileName)
+	if err != nil {
+		return nil, err
+	}
+	defer surface.Free()
+
+	texture, err := renderer.CreateTextureFromSurface(surface)
+	if err != nil {
+		return nil, err
+	}
+
+	return texture, nil
+}
+
+func assert(condition bool) {
+	if !condition {
+		panic("assertion failed")
 	}
 }
