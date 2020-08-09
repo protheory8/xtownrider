@@ -41,6 +41,7 @@ func gameInit() (gameState, resourceManager) {
 	gameState.entities = append(gameState.entities, newEntity(resourceManager.get(gameState.renderer, "resources/car.png").(*sdl.Texture)))
 	gameState.entities[0].posX = 200
 	gameState.entities[0].posY = 200
+	gameState.entities[0].flip = sdl.FLIP_HORIZONTAL
 
 	return gameState, resourceManager
 }
@@ -65,8 +66,8 @@ func render(gameState *gameState) {
 
 	for _, entity := range gameState.entities {
 		if entity.texture != nil {
-			gameState.renderer.Copy(entity.texture, nil, &sdl.Rect{X: entity.posX, Y: entity.posY,
-				W: entity.textureW, H: entity.textureH})
+			gameState.renderer.CopyEx(entity.texture, nil, &sdl.Rect{X: entity.posX, Y: entity.posY,
+				W: entity.textureW, H: entity.textureH}, entity.rotation, nil, entity.flip)
 		}
 	}
 
@@ -75,7 +76,6 @@ func render(gameState *gameState) {
 
 func handleInput(gameState *gameState) {
 	var event sdl.Event
-	var eventType uint32
 
 	for {
 		event = sdl.PollEvent()
@@ -83,9 +83,8 @@ func handleInput(gameState *gameState) {
 			return
 		}
 
-		eventType = event.GetType()
-		switch eventType {
-		case sdl.QUIT:
+		switch event.(type) {
+		case *sdl.QuitEvent:
 			gameState.shouldQuit = true
 		}
 	}

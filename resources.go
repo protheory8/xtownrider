@@ -28,7 +28,7 @@ import (
 	"github.com/veandco/go-sdl2/sdl"
 )
 
-// resourceManager is a struct that manages all your game resources, like
+// resourceManager is a struct that manages all game resources, like
 // sprites, audio files, etc.
 type resourceManager struct {
 	resources map[string]interface{}

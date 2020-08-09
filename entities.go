@@ -27,6 +27,9 @@ import "github.com/veandco/go-sdl2/sdl"
 type entity struct {
 	posX     int32
 	posY     int32
+	rotation float64
+	flip     sdl.RendererFlip
+
 	texture  *sdl.Texture
 	textureW int32
 	textureH int32
@@ -36,6 +39,8 @@ func newEntity(texture *sdl.Texture) entity {
 	entity := entity{}
 	entity.posX = 0
 	entity.posY = 0
+	entity.rotation = 0.0
+	entity.flip = sdl.FLIP_NONE
 
 	if texture != nil {
 		var err error
