@@ -1,4 +1,4 @@
-module github.com/protheory8/xtownrider
+module github.com/protheory8/xtownrider-go
 
 go 1.14
 
