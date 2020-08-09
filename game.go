@@ -38,6 +38,9 @@ func gameInit() (gameState, resourceManager) {
 	resourceManager := newResourceManager()
 
 	resourceManager.addResources(gameState.renderer, []string{"resources/car.png"})
+	gameState.entities = append(gameState.entities, newEntity(resourceManager.get(gameState.renderer, "resources/car.png").(*sdl.Texture)))
+	gameState.entities[0].posX = 200
+	gameState.entities[0].posY = 200
 
 	return gameState, resourceManager
 }

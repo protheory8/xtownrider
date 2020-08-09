@@ -64,6 +64,8 @@ func newGameState() gameState {
 		panic(err)
 	}
 
+	gameState.entities = []entity{}
+
 	return gameState
 }
 
