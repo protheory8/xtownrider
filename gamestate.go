@@ -32,6 +32,7 @@ type gameState struct {
 	shouldQuit bool
 	window     *sdl.Window
 	renderer   *sdl.Renderer
+	entities   []entity
 }
 
 // newGameState makes a new instance of gameState struct.

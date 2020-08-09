@@ -37,7 +37,7 @@ func gameInit() (gameState, resourceManager) {
 	gameState := newGameState()
 	resourceManager := newResourceManager()
 
-	resourceManager.addResources(gameState.renderer, []string{"resources/resource.bmp", "resources/resource2.bmp"})
+	resourceManager.addResources(gameState.renderer, []string{"resources/car.png"})
 
 	return gameState, resourceManager
 }
@@ -57,7 +57,18 @@ func mainGameLoop(gameState *gameState, resourceManager *resourceManager) {
 
 func update(_ *gameState) {}
 
-func render(_ *gameState) {}
+func render(gameState *gameState) {
+	gameState.renderer.Clear()
+
+	for _, entity := range gameState.entities {
+		if entity.texture != nil {
+			gameState.renderer.Copy(entity.texture, nil, &sdl.Rect{X: entity.posX, Y: entity.posY,
+				W: entity.textureW, H: entity.textureH})
+		}
+	}
+
+	gameState.renderer.Present()
+}
 
 func handleInput(gameState *gameState) {
 	var event sdl.Event
