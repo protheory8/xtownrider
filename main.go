@@ -25,8 +25,8 @@ package main
 import "runtime"
 
 func main() {
-	runtime.LockOSThread()
 	runtime.GOMAXPROCS(runtime.NumCPU())
+	runtime.LockOSThread()
 
 	gameState, resourceManager := gameInit()
 	defer gameState.drop()

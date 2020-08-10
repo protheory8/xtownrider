@@ -59,7 +59,9 @@ func mainGameLoop(gameState *gameState, resourceManager *resourceManager) {
 	}
 }
 
-func update(_ *gameState) {}
+func update(gameState *gameState) {
+	gameState.entities[0].posX++
+}
 
 func render(gameState *gameState) {
 	gameState.renderer.Clear()
